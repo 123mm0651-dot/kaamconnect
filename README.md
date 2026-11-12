@@ -44,3 +44,7 @@ kaamconnect/
 ## License
 
 No license has been specified yet. All rights remain with the repository owner unless a license is added.
+
+## Deployment
+
+The site is deployed to GitHub Pages using the workflow in `.github/workflows/deploy.yml`.
