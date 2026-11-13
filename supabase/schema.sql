@@ -103,6 +103,14 @@ create trigger bookings_updated_at before update on public.bookings
 for each row execute procedure public.set_updated_at();
 
 -- Helper checks the trusted role stored in profiles.
+create or replace function public.current_app_role()
+returns public.app_role
+language sql stable security definer
+set search_path = ''
+as $
+  select role from public.profiles where id = (select auth.uid());
+$;
+
 create or replace function public.is_admin()
 returns boolean
 language sql stable security definer
@@ -129,7 +137,7 @@ for update to authenticated
 using (id = (select auth.uid()) or public.is_admin())
 with check (
   public.is_admin()
-  or (id = (select auth.uid()) and role = (select p.role from public.profiles p where p.id = (select auth.uid())))
+  or (id = (select auth.uid()) and role = public.current_app_role())
 );
 
 -- Public catalog is readable; only admins can manage it.
