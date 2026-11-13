@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
+import { readFile } from 'node:fs/promises';
 import { pool } from './db.js';
 import authRoutes from './routes/auth.js';
 import serviceRoutes from './routes/services.js';
@@ -29,5 +30,10 @@ app.use((err, _req, res, _next) => {
   console.error(err.message);
   res.status(err.status || 500).json({ error: err.status ? err.message : 'Internal server error' });
 });
+
 const port = process.env.PORT || 10000;
+// The schema uses idempotent CREATE TABLE / INSERT statements, so it is safe
+// to run at startup and ensures a fresh Render database is initialized.
+const schema = await readFile(new URL('../sql/schema.sql', import.meta.url), 'utf8');
+await pool.query(schema);
 app.listen(port, () => console.log(`KaamConnect API listening on ${port}`));
