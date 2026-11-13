@@ -1,0 +1,27 @@
+databases:
+  - name: kaamconnect-db
+    databaseName: kaamconnect
+    user: kaamconnect
+    plan: free
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: kaamconnect-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kaamconnect-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://123mm0651-dot.github.io
+      - key: DATABASE_SSL
+        value: "false"
