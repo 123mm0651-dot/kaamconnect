@@ -3,6 +3,7 @@ databases:
     databaseName: kaamconnect
     user: kaamconnect
     plan: free
+    region: singapore
     postgresMajorVersion: "16"
 
 services:
@@ -10,6 +11,7 @@ services:
     name: kaamconnect-api
     runtime: node
     plan: free
+    region: singapore
     rootDir: backend
     buildCommand: npm install
     startCommand: npm start
